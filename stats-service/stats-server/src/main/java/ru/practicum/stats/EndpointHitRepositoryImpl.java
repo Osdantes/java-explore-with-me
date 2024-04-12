@@ -50,7 +50,7 @@ public class EndpointHitRepositoryImpl implements EndpointHitRepository {
         }
         String sql = "select e.app, e.uri, " + cnt_query_str +
                 "from endpoint_hit e " +
-                "where e.timestamp between '" + start + "' and '" + end + "' ";
+                "where e.timestamp between start = ? and end = ?";
         if (uris != null && uris.length > 0) {
             sql += "and e.uri in (";
             String uriList = "'";
@@ -64,7 +64,7 @@ public class EndpointHitRepositoryImpl implements EndpointHitRepository {
 
         log.info("getHits.sql = {}", sql);
 
-        return jdbcTemplate.query(sql, this::mapper);
+        return jdbcTemplate.query(sql, new Object[] { start, end }, this::mapper);
     }
 
     private EndpointHitStatDto mapper(ResultSet resultSet, int rowNum) throws SQLException {
