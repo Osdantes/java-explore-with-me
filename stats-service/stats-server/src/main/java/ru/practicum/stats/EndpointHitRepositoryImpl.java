@@ -50,7 +50,7 @@ public class EndpointHitRepositoryImpl implements EndpointHitRepository {
         }
         String sql = "select e.app, e.uri, " + cnt_query_str +
                 "from endpoint_hit e " +
-                "where e.timestamp between start = ? and end = ?";
+                "where e.timestamp between ? and ?";
         if (uris != null && uris.length > 0) {
             sql += "and e.uri in (";
             String uriList = "'";
