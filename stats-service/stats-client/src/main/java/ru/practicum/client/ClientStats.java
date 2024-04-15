@@ -31,6 +31,21 @@ public class ClientStats {
         return makeAndSendRequest(HttpMethod.GET, path, userId, parameters, null);
     }
 
+    public ResponseEntity<Object> get(String start, String end, String[] uris, Boolean unique) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("start", start);
+        params.put("end", end);
+        params.put("uris", uris);
+        params.put("unique", unique);
+        return makeAndSendRequest(
+                HttpMethod.GET,
+                "/stats?start={start}&end={end}&uris={uris}&unique={unique}",
+                null,
+                params,
+                new ParameterizedTypeReference<List<Object>>() {}
+        );
+    }
+
     protected <T> ResponseEntity<Object> post(String path, T body) {
         return post(path, null, null, body);
     }
