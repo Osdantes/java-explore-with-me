@@ -20,6 +20,7 @@ import java.util.List;
 @Slf4j
 public class EndpointHitRepositoryImpl implements EndpointHitRepository {
     private final JdbcTemplate jdbcTemplate;
+private static final DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public EndpointHit addHit(EndpointHitDto endpointHitDto) {
@@ -63,7 +64,7 @@ public class EndpointHitRepositoryImpl implements EndpointHitRepository {
                "order by hits desc";
 
         log.info("getHits.sql = {}", sql);
-return jdbcTemplate.query(sql, this::mapper, start, end);
+return jdbcTemplate.query(sql, this::mapper, LocalDateTime.parse(start, df), LocalDateTime.parse(end, df));
     }
 
     private EndpointHitStatDto mapper(ResultSet resultSet, int rowNum) throws SQLException {
