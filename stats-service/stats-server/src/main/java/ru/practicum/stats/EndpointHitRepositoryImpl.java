@@ -63,8 +63,7 @@ public class EndpointHitRepositoryImpl implements EndpointHitRepository {
                "order by hits desc";
 
         log.info("getHits.sql = {}", sql);
-
-        return jdbcTemplate.query(sql, new Object[] { start, end }, this::mapper);
+return jdbcTemplate.query(sql, this::mapper, start, end);
     }
 
     private EndpointHitStatDto mapper(ResultSet resultSet, int rowNum) throws SQLException {
