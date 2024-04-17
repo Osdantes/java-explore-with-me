@@ -9,6 +9,7 @@ import ru.practicum.location.LocationDto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 @Data
 @Builder
@@ -35,6 +36,7 @@ public class NewEventDto {
 
     private Boolean paid;
 
+    @Positive
     private Integer participantLimit;
 
     private Boolean requestModeration;
