@@ -47,6 +47,7 @@ public class EventFullDto {
 
     private int confirmedRequests;
 
+    @Positive
     private int participantLimit;
 
     private boolean requestModeration;
