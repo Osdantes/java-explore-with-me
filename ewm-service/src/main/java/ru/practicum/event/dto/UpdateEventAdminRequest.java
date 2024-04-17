@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import ru.practicum.event.EventStateActionAdmin;
 import ru.practicum.location.LocationDto;
+import javax.validation.constraints.Positive;
 
 @Data
 @Builder
@@ -28,6 +29,7 @@ public class UpdateEventAdminRequest {
 
     private Boolean paid;
 
+    @Positive
     private Integer participantLimit;
 
     private Boolean requestModeration;
