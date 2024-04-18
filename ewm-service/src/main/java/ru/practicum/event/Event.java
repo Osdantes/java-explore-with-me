@@ -20,7 +20,6 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "events", schema = "public")
 public class Event {

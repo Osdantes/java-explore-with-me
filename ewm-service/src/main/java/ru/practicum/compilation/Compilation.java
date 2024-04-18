@@ -14,7 +14,6 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "compilations", schema = "public")
 public class Compilation {
