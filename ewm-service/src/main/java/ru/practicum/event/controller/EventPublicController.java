@@ -61,7 +61,7 @@ public class EventPublicController {
     public EventFullDto getEventByIdAndState(@Positive @PathVariable int id, HttpServletRequest request) {
         log.info("Request for get event {}", id);
         EventFullDto event = eventService.findByIdAndState(id);
-
+        event.setViews(event.getViews() + 1);
         log.info("Client ip: {}", request.getRemoteAddr());
         log.info("Endpoint path: {}", request.getRequestURI());
         clientStats.addStatInfo(EndpointHitDto.builder()
