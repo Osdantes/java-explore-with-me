@@ -21,7 +21,6 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@Transactional
 @RequiredArgsConstructor
 @RequestMapping(path = "/admin/events")
 public class EventAdminController {

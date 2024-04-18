@@ -4,8 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.compilation.dto.CompilationDto;
@@ -17,6 +15,7 @@ import ru.practicum.event.EventRepository;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -53,16 +52,19 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<CompilationDto> getCompilations(Boolean pinned, int from, int size) {
-        Pageable page = PageRequest.of(from, size, Sort.by(Sort.Direction.ASC, "id"));
+    public List<CompilationDto> getCompilations(Boolean pinned, Integer from, Integer size) {
+
+        PageRequest pageRequest = PageRequest.of(from, size);
+        List<Compilation> compilations;
         if (pinned == null) {
-            return CompilationMapper.toCompilationDto(compilationRepository.findAll(page));
-        } else if (pinned) {
-            return CompilationMapper.toCompilationDto(compilationRepository.findByPinnedTrue(page));
+            compilations = compilationRepository.findAll(pageRequest).getContent();
         } else {
-            return CompilationMapper.toCompilationDto(compilationRepository.findByPinnedFalse(page));
+            compilations = compilationRepository.findAllByPinned(pinned, pageRequest);
         }
+
+        return compilations.stream()
+                .map(CompilationMapper::toCompilationDto)
+                .collect(Collectors.toList());
     }
 
     @Override

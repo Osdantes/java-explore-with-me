@@ -19,14 +19,16 @@ import ru.practicum.user.User;
 import ru.practicum.user.UserService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
 @Service
 public class RequestServiceImpl implements RequestService {
-    @Autowired
     private final RequestRepository requestRepository;
 
     @Autowired
@@ -111,30 +113,31 @@ public class RequestServiceImpl implements RequestService {
             isNeedAllToConfirm = true;
         }
 
+        List<Request> requestsToUpdate = new ArrayList<>();
         for (int requestId : requests.getRequestIds()) {
             Request request = requestRepository.findById(requestId)
                     .orElseThrow(() -> new ObjectNotFoundException(requestId, "Request with id " + requestId + " was not found"));
 
-            if (!request.getStatus().equals(RequestStatus.PENDING)) {
-                throw new InvalidParticipationRequest("Request must have status PENDING");
+            if (request.getStatus().equals(RequestStatus.PENDING)) {
+                requestsToUpdate.add(request);
             }
+        }
 
+        for (Request request : requestsToUpdate) {
             if (isNeedAllToCancel) {
                 request.setStatus(RequestStatus.CANCELED);
-            } else {
-                if (requests.getStatus().equals(RequestStatus.CONFIRMED)) {
-                    request.setStatus(RequestStatus.CONFIRMED);
-                    event.setConfirmedRequests(event.getConfirmedRequests() + 1);
-                    event = eventRepository.save(event);
-                    if (!isNeedAllToConfirm && event.getParticipantLimit() <= event.getConfirmedRequests()) {
-                        isNeedAllToCancel = true;
-                    }
-                } else {
-                    request.setStatus(RequestStatus.REJECTED);
+            } else if (requests.getStatus().equals(RequestStatus.CONFIRMED)) {
+                request.setStatus(RequestStatus.CONFIRMED);
+                event.setConfirmedRequests(event.getConfirmedRequests() + 1);
+                event = eventRepository.save(event);
+                if (!isNeedAllToConfirm && event.getParticipantLimit() <= event.getConfirmedRequests()) {
+                    isNeedAllToCancel = true;
                 }
+            } else {
+                request.setStatus(RequestStatus.REJECTED);
             }
-            requestRepository.save(request);
         }
+        requestRepository.saveAll(requestsToUpdate);
 
         List<ParticipationRequestDto> confirmedRequests = RequestMapper.toRequestDto(requestRepository
                 .findByEventIdAndStatus(eventId, RequestStatus.CONFIRMED));

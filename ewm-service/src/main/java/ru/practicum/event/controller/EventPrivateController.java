@@ -30,7 +30,6 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@Transactional
 @RequiredArgsConstructor
 @RequestMapping(path = "/users/{userId}/events")
 public class EventPrivateController {

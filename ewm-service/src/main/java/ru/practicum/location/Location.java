@@ -1,17 +1,15 @@
 package ru.practicum.location;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.proxy.HibernateProxy;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,4 +21,18 @@ public class Location {
     private int id;
     private float lat;
     private float lon;
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Location location = (Location) o;
+        return getId() == location.getId() && Float.compare(location.getLat(), getLat()) == 0 && Float.compare(location.getLon(), getLon()) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getLat(), getLon());
+    }
 }

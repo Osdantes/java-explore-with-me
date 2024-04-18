@@ -23,7 +23,6 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @RequestMapping(path = "/events")
 public class EventPublicController {

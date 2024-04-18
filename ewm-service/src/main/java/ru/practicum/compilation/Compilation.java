@@ -1,26 +1,17 @@
 package ru.practicum.compilation;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.practicum.event.Event;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -41,6 +32,7 @@ public class Compilation {
     @JoinTable(name = "compilations_events",
             joinColumns = { @JoinColumn(name = "compilation_id") },
             inverseJoinColumns = { @JoinColumn(name = "event_id") })
+    @ToString.Exclude
     private Set<Event> events = new HashSet<>();
 
     public void addEvent(Event event) {
