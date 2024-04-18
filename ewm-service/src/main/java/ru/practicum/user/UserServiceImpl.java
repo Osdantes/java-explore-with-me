@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsById(userId)) {
             userRepository.deleteById(userId);
         } else {
-            throw new ObjectNotFoundException(userId, "User with id " + userId + " was not found"));
+            throw new ObjectNotFoundException(userId, "User with id " + userId + " was not found");
         }
     }
 
