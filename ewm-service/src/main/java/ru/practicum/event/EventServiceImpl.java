@@ -44,7 +44,6 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.findByIdAndState(eventId, EventState.PUBLISHED)
                 .orElseThrow(() -> new ObjectNotFoundException(eventId, "Event with id " + eventId + " was not found"));
 
-        //event.setViews(event.getViews() + 1);
         eventRepository.save(event);
 
         return EventMapper.toEventFullDto(event);
