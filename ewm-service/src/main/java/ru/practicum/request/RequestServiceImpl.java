@@ -112,10 +112,8 @@ public class RequestServiceImpl implements RequestService {
         }
 
         List<Request> requestsToUpdate = new ArrayList<>();
-        for (int requestId : requests.getRequestIds()) {
-            Request request = requestRepository.findById(requestId)
-                    .orElseThrow(() -> new ObjectNotFoundException(requestId, "Request with id " + requestId + " was not found"));
-
+        List<Request> requestList = new ArrayList<>(requestRepository.findAllById(requests.getRequestIds()));
+        for (Request request : requestList) {
             if (request.getStatus().equals(RequestStatus.PENDING)) {
                 requestsToUpdate.add(request);
             }
