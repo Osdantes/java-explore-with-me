@@ -74,7 +74,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Transactional(readOnly = true)
-    private Compilation addEventsInCompilation(Compilation compilation, Set<Integer> eventsId) {
+    public Compilation addEventsInCompilation(Compilation compilation, Set<Integer> eventsId) {
         compilation.setEvents(new HashSet<>());
         if (eventsId != null && !eventsId.isEmpty()) {
             for (Event event : eventRepository.findAllById(eventsId)) {
