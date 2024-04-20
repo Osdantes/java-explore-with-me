@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.DateFormatter;
 import ru.practicum.category.Category;
 import ru.practicum.category.CategoryMapper;
@@ -16,6 +17,8 @@ import ru.practicum.event.dto.EventShortDto;
 import ru.practicum.event.dto.NewEventDto;
 import ru.practicum.event.dto.UpdateEventAdminRequest;
 import ru.practicum.event.dto.UpdateEventUserRequest;
+import ru.practicum.eventsinplace.EventsInPlaceMapper;
+import ru.practicum.eventsinplace.EventsInPlaceRepository;
 import ru.practicum.exception.InvalidEventStateOrDate;
 import ru.practicum.exception.InvalidPathVariableException;
 import ru.practicum.location.Location;
@@ -38,6 +41,7 @@ public class EventServiceImpl implements EventService {
     private final LocationRepository locationRepository;
     private final CategoryService categoryService;
     private final UserService userService;
+    private final EventsInPlaceRepository eventsInPlaceRepository;
 
     @Override
     public EventFullDto findByIdAndState(int eventId) {
@@ -81,6 +85,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public EventFullDto updateEventByAdmin(int eventId, UpdateEventAdminRequest eventDto) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new ObjectNotFoundException(eventId, "Event with id " + eventId + " was not found"));
@@ -122,6 +127,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<EventFullDto> findAdminEvents(Integer[] users,
                                               String[] states,
                                               Integer[] categories,
@@ -153,6 +159,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public EventFullDto createEvent(int userId, NewEventDto eventDto) {
         LocalDateTime now = LocalDateTime.now();
 
@@ -193,6 +200,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public EventFullDto updateUserEvent(int userId, int eventId, UpdateEventUserRequest eventDto) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new ObjectNotFoundException(eventId, "Event with id " + eventId + " was not found"));
@@ -237,5 +245,15 @@ public class EventServiceImpl implements EventService {
     public Event getEventById(int eventId) {
         return eventRepository.findById(eventId)
                 .orElseThrow(() -> new ObjectNotFoundException(eventId, "Event with id " + eventId + " was not found"));
+    }
+
+    @Override
+    public List<EventFullDto> findEventsByPlaceId(int placeId, int from, int size) {
+        return EventsInPlaceMapper.toEventFullDto(eventsInPlaceRepository.findEventsByPlaceId(placeId, from, size));
+    }
+
+    @Override
+    public List<EventFullDto> findEventsByPlaceName(String placeName, int from, int size) {
+        return EventsInPlaceMapper.toEventFullDto(eventsInPlaceRepository.findEventsByPlaceName(placeName, from, size));
     }
 }

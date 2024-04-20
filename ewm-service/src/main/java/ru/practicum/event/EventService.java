@@ -40,4 +40,8 @@ public interface EventService {
                                        String rangeEnd,
                                        int from,
                                        int size);
+
+    List<EventFullDto> findEventsByPlaceId(int placeId, int from, int size);
+
+    List<EventFullDto> findEventsByPlaceName(String placeName, int from, int size);
 }
