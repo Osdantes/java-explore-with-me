@@ -12,9 +12,7 @@ import ru.practicum.compilation.dto.UpdateCompilationRequest;
 import ru.practicum.event.Event;
 import ru.practicum.event.EventRepository;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -78,15 +76,10 @@ public class CompilationServiceImpl implements CompilationService {
     @Transactional(readOnly = true)
     private Compilation addEventsInCompilation(Compilation compilation, Set<Integer> eventsId) {
         compilation.setEvents(new HashSet<>());
-
         if (eventsId != null && !eventsId.isEmpty()) {
-            eventsId.forEach((eventId) -> {
-                Event event = eventRepository
-                        .findById(eventId)
-                        .orElseThrow(() -> new ObjectNotFoundException(eventId, "Event with id{} was not found"));
-
+            for (Event event : eventRepository.findAllById(eventsId)) {
                 compilation.addEvent(event);
-            });
+            }
         }
         return compilation;
     }
