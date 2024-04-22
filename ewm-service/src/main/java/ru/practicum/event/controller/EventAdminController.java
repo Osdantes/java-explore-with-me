@@ -46,4 +46,22 @@ public class EventAdminController {
                 users, categories, states, rangeStart, rangeEnd, from, size);
         return eventService.findAdminEvents(users, states, categories, rangeStart, rangeEnd, from, size);
     }
+
+    @GetMapping("/places/{placeId}")
+    @Transactional(readOnly = true)
+    public List<EventFullDto> findEventsByPlaceId(@Positive @PathVariable int placeId,
+                                                  @PositiveOrZero @RequestParam(defaultValue = "0") int from,
+                                                  @Positive @RequestParam(defaultValue = "10") int size) {
+        log.info("Request for get events in location with id {} from={} size={}", placeId, from, size);
+        return eventService.findEventsByPlaceId(placeId, from, size);
+    }
+
+    @GetMapping("/places")
+    @Transactional(readOnly = true)
+    public List<EventFullDto> findEventsByPlaceName(@RequestParam String placeName,
+                                                    @PositiveOrZero @RequestParam(defaultValue = "0") int from,
+                                                    @Positive @RequestParam(defaultValue = "10") int size) {
+        log.info("Request for get events in location with name {} from={} size={}", placeName, from, size);
+        return eventService.findEventsByPlaceName(placeName, from, size);
+    }
 }
